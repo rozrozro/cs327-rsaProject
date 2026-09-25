@@ -6,13 +6,18 @@ import java.util.Random;
  * 
  */
 
-public class AndersonThomasRSA
+public class RozRogelio
 {
-	public int gcd (int inE, int inZ) {
-		// TO BE FINISHED
-		// Must implement Euclid's algorithm
-		// NO brute-forcing; violation will lead to zero points
-		// NO recursion; violation will lead to zero points
+	public int gcd (int inE, int inZ) {//euclid's algorithm + gcd func, 
+	// tells us whether e and z are relatively prime
+		int a = inE;
+		int b = inZ;
+		while (b != 0) {
+			int remainder = a % b;
+			a = b;
+			b = remainder;
+		}
+		return a; //when b = 0,,, a holds gcd
 	}
 
 	public void testGcd () {
@@ -34,11 +39,36 @@ public class AndersonThomasRSA
 	//	-1: no inverse
 	//	inverse of inE mod inZ
 	//
-	public int xgcd (int inE, int inZ) {
-		// TO BE FINISHED
-		// Must implement the extended Euclidean algorithm
-		// NO brute-forcing; violation will lead to zero points
-		// NO recursion; violation will lead to zero points
+	public int xgcd (int inE, int inZ) {//extended euclid, finds modular inverse of e mod z
+		
+		int previousRemainder = inZ;
+		int currentRemainder = inE;
+		int previousCoefficientE = 0;
+		int currentCoefficientE = 1;
+
+		while (currentRemainder != 0) { //self explanatory 
+			int quotient = previousRemainder / currentRemainder;
+			int newRemainder = previousRemainder - quotient * currentRemainder;
+			
+			previousRemainder = currentRemainder;
+
+			currentRemainder = newRemainder;
+			
+			int newCoefficientE = previousCoefficientE - quotient * currentCoefficientE;
+			
+			previousCoefficientE = currentCoefficientE;
+			
+			currentCoefficientE = newCoefficientE;
+		}
+		if (previousRemainder != 1){
+			return -1;
+		}
+		//convert negative inverse to positive equivalent
+		int inverse = previousCoefficientE & inZ;
+		if (inverse < 0){
+			inverse += inz;
+		}
+		return inverse;
 	}
 
 	public void testXgcd () {
@@ -54,7 +84,32 @@ public class AndersonThomasRSA
 	}
 
 	public int[] keygen (int inP, int inQ, int inE) {
-		// TO BE FINISHED
+		int n = inP * inQ; //N = P * Q
+
+		int z = (inP -1) * (inQ -1);//Z = (p - 1)(q - 1)euler totient funct
+
+		int e = inE; //takes e passed in function, stores as simpler variable
+
+		//rsa needs e > 1. did caller give us usable e?
+		if (e <=1){
+			Random rand = new Random(); //new Random obj named rand 
+
+			e = 2 + rand.nextInt(z - 2); //random start value for e
+			while (gcd(e, z) != 1) { //keep looping while gcd (e, z) isn't 1
+				e = 2+ rand.nextInt(z - 2); //try another e
+			}
+		}
+
+		else {
+			if (e >= z || gcd(e, z) != 1){ //if e is big OR e isn't prime to z, reject
+				System.out.println("Bad value for e");
+				return null; //stop keygen()...return no key array
+			}
+		}
+		int d = xgcd(e, z);
+
+		int[] keypair = {e, n, d};
+		return keypair;
 	}
 
 	//
@@ -105,7 +160,7 @@ public class AndersonThomasRSA
 	}
 
 	public static void main (String[] args) {
-		AndersonThomasRSA atrsa = new AndersonThomasRSA ();
+		RozRogelio atrsa = new RozRogelio ();
 
 		System.out.println ("********** Small RSA Project output begins ********** ");
 
