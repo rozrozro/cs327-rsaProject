@@ -146,7 +146,7 @@ public class RozRogelio
 			exp >>= 1;
 		}
 		
-		return r;
+		return (int) r;
 	}
 
 	public int encrypt (int message, int inE, int inN) {
