@@ -132,15 +132,29 @@ public class RozRogelio
 	// For example, 5^20 is too big to be held by a Java primitive integer
 	//
 	public int modExp (int a, int b, int n) {
-		// TO BE FINISHED
+		long r = 1;  // result
+		long base = a; // base
+		int exp = b; // exponent
+
+		while (exp > 0) {
+			int currExp = exp & 1;
+			if (currExp == 1) {
+				r = (r * a) % n;
+			}
+
+			base = (base * base) % n;
+			exp >>= 1;
+		}
+		
+		return r;
 	}
 
 	public int encrypt (int message, int inE, int inN) {
-		// TO BE FINISHED
+		return modExp(message, inE, inN);
 	}
 
 	public int decrypt (int ciphertext, int inD, int inN) {
-		// TO BE FINISHED
+		return modExp(ciphertext, inD, inN);
 	}
 
 	public void testRSA () {
