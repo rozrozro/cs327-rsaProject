@@ -66,7 +66,7 @@ public class RozRogelio
 		//convert negative inverse to positive equivalent
 		int inverse = previousCoefficientE & inZ;
 		if (inverse < 0){
-			inverse += inz;
+			inverse += inZ;
 		}
 		return inverse;
 	}
