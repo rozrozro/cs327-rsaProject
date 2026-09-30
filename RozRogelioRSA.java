@@ -64,7 +64,7 @@ public class RozRogelioRSA
 			return -1;
 		}
 		//convert negative inverse to positive equivalent
-		int inverse = previousCoefficientE & inZ;
+		int inverse = previousCoefficientE % inZ;
 		if (inverse < 0){
 			inverse += inZ;
 		}
@@ -139,7 +139,7 @@ public class RozRogelioRSA
 		while (exp > 0) {
 			int currExp = exp & 1;
 			if (currExp == 1) {
-				r = (r * a) % n;
+				r = (r * base) % n;
 			}
 
 			base = (base * base) % n;
