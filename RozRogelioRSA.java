@@ -6,7 +6,7 @@ import java.util.Random;
  * 
  */
 
-public class RozRogelio
+public class RozRogelioRSA
 {
 	public int gcd (int inE, int inZ) {//euclid's algorithm + gcd func, 
 	// tells us whether e and z are relatively prime
@@ -174,7 +174,7 @@ public class RozRogelio
 	}
 
 	public static void main (String[] args) {
-		RozRogelio atrsa = new RozRogelio ();
+		RozRogelioRSA atrsa = new RozRogelioRSA ();
 
 		System.out.println ("********** Small RSA Project output begins ********** ");
 
