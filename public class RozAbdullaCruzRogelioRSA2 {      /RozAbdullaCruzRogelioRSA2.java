@@ -39,33 +39,53 @@ public class RozAbdullaCruzRogelioRSA2 {
 
     public static void realWorldExample(String[] args) {
 
+        // TASK 2.3
         // Real World Example p&q
         String rwP = "c86422b12e3a0c79cbe9f10c47a436fc54a71309214a3455054fca5912e442c32247ffdc782e574c96d7d43e60e383d7f0f091f08909f2629c5ad1bd5ce2427333dedb281abb1bffcbfb2814b402dc29bf5406d6e749ba57e1e6843f0111875a34439aeb2aa6c554d71b8cbaefbe0f6a4c7a0145d75afda323c7520a29d4d3d799a676977a0d3bd0f3411023c3ab106ee5fb0d2fbaa64e85fb71b6b76ebebbbfcd1ffd1de93302e90a3fefe0ffcb95a3da7ce6e2dcdd973873b96dd939763025";
         String rwQ = "d062fa3d79191304a4a64d39dc3b5ca757b9b740304825b13d05d17ffcf3b1e033dbffbe31eeea0b908f8ed36ebc2d1b1db3a094e2ddd4976549e225981ac6f9586a31f79b90cc41ed4c069d1306482345c8cc61fc4567bd2043484f8ac2fca32d7690c0881889b44a365795b0af07046a6bc468b10570033e2b6ad8d7702266c6d6ca5eec75224039998f719f74ad8fdebe9c4347a71e6cd96e03796b570f459c23c6ca250761e741f957d4b9f24df783e6c2ebe91e64863b710989da81a261";
         // e = 2^16 + 1
         String rwE = "65537";
-        
-        // TASK 2.3
-        // Q1: What is Bob's public key (N)?
+
         BigInteger p = new BigInteger(rwP, 16);
         BigInteger q = new BigInteger(rwQ, 16);
-        
-        
+        BigInteger e = new BigInteger(rwE, 10);
+        BigInteger m = new BigInteger("3", 10); // Alice's message
+
+        // Q1: What is Bob's public key (N)?
+        BigInteger N = p.multiply(q);
+        System.out.println("Bob's public key = " + N.toString(16) + "\n");
 
         // Q2: How many bits does Bob's N, p, and q have?
+        int nBits = N.bitLenth();
+        int pBits = p.bitLength();
+        int qBits = q.bitLength();
+        System.out.println("Bit-length of p = " + pBits);
+        System.out.println("Bit-length of p = " + pBits);
+        System.out.println("Bit-length of q = " + qBits + "\n");
 
-
-        // Q3: What is Bob's private key?
+        // Q3: What is Bob's private key? (z = (p-1)*(q-1)) , (d = e(inverse) mod z)
+        BigInteger pPrime = p.subtract(BigInteger.ONE);
+        BigInteger qPrime = q.subtract(BigInteger.ONE);
+        BigInteger z = pPrime.multiply(qPrime);
+        BigInteger d = e.modInverse(z);
+        System.out.println("Bob's private key = " + d.toString(16) + "\n");
 
 
         // Q4: Alice has Bob's public key. How will Alice perform the plain RSA encryption
         //     for a message m=3 and what is the value of the ciphertext?
-
+        System.out.println("Alice will encrypt her message m using Bob's public key, c = m^e mod N");
+        BigInteger c = m.modPow(e,N);
+        System.out.println("Ciphertext = " + c.toString(16) + "\n");
 
         // Q5: For the ciphertext in the last question, how will Bob decrypt it?
+        System.out.println("Bob will decrypt Alice's message using his private key, m = c^d mod N");
+        BigInteger decryptedM = c.modPow(d,N);
+        System.out.println("Decrypted ciphertext = " + decryptedM.toString(16) + "\n");
 
+        // Q6: Measure the speed of the RSA decryption
 
-        // Q6
+        // Q7: Implement the Chinese Remainder Theorem to decrypt the ciphertext
+
     }
 
 
