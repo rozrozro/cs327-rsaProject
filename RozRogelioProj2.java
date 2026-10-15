@@ -1,51 +1,53 @@
 import java.math.BigInteger;
 
 
-public class RozRogelioProj2 {
+public class AbdullaRozCruzRogelioRSA2 {
 // c = m^e mod N (public key)
     public static void main(String[] args) {
+        
+        System.out.println("**********  Flawed Example  **********");
         //how many bits does N have
         BigInteger N = new BigInteger ("1010517893091632587989664773819175360110584414091408545389643", 10); //10 means base 10
         //^^ new object N that is a BigInteger
         BigInteger e = new BigInteger("65537", 10);
         //^new object e that is a BigInteger
-        System.out.println("Bit length of N =" + N.bitLength());
+        System.out.println("Bit length of N = " + N.bitLength());
 
         //got p & q from sagecell 
         BigInteger p = new BigInteger("863490933159798076360907020927", 10);
         System.out.println("p (hex) = " + p.toString(16));
         BigInteger q = new BigInteger("1170270415456262384144425721909", 10);
         System.out.println("q (hex) = " + q.toString(16));
-        System.out.println("Bit length of p =" + p.bitLength());
+        System.out.println("Bit length of p = " + p.bitLength());
         System.out.println("Bit length of q = " + q.bitLength());
     
-    //calculate phi N = (p-1)(q-1)
-    BigInteger phi = p.subtract(BigInteger.ONE) //p.subtract(1) error, 1 is an int
-        .multiply(q.subtract(BigInteger.ONE)); //basically the p-1)(q-1) formula lol
-    System.out.println("phi (hex) = " + phi.toString(16));
+        //calculate phi N = (p-1)(q-1)
+        BigInteger phi = p.subtract(BigInteger.ONE) //p.subtract(1) error, 1 is an int
+            .multiply(q.subtract(BigInteger.ONE)); //basically the p-1)(q-1) formula lol
+        System.out.println("phi (hex) = " + phi.toString(16));
 
-    //calculate4 d ------ modular inverse of e mod phi
-    BigInteger d = e.modInverse(phi); //d big int = inverse phi, find # that multiplies with e to give remainder of 1 mod phi
-    System.out.println("d (hex) = " + d.toString(16));
+        //calculate4 d ------ modular inverse of e mod phi
+        BigInteger d = e.modInverse(phi); //d big int = inverse phi, find # that multiplies with e to give remainder of 1 mod phi
+        System.out.println("d (hex) = " + d.toString(16));
 
-    //store alice's message 3 as bigint
-    BigInteger m = BigInteger.valueOf(3);
-    //c - m^e mod n encryption
-    BigInteger c = m.modPow(e, N);
+        //store alice's message 3 as bigint
+        BigInteger m = BigInteger.valueOf(3);
+        //c - m^e mod n encryption
+        BigInteger c = m.modPow(e, N);
 
-    // Print encrypted message.
-    System.out.println("Ciphertext (hex) = " + c.toString(16));
+        // Print encrypted message.
+        System.out.println("Ciphertext (hex) = " + c.toString(16));
 
-    // Decrypt, then print the decrypted message.
-    BigInteger decrypted = c.modPow(d, N);
-    System.out.println("Decrypted message (hex) = " + decrypted.toString(16));
+        // Decrypt, then print the decrypted message.
+        BigInteger decrypted = c.modPow(d, N);
+        System.out.println("Decrypted message (hex) = " + decrypted.toString(16));
 
-    realWorldExample();
+        realWorldExample();
 
-}   //end main
+    }   //end main
 
     public static void realWorldExample() {
-        System.out.println("\nReal world example");
+        System.out.println("\n**********  Real world example  **********");
 
         BigInteger p = new BigInteger(
             "c86422b12e3a0c79cbe9f10c47a436fc54a71309214a3455054fca5912e442c32247ffdc782e574c96d7d43e60e383d7f0f091f08909f2629c5ad1bd5ce2427333dedb281abb1bffcbfb2814b402dc29bf5406d6e749ba57e1e6843f0111875a34439aeb2aa6c554d71b8cbaefbe0f6a4c7a0145d75afda323c7520a29d4d3d799a676977a0d3bd0f3411023c3ab106ee5fb0d2fbaa64e85fb71b6b76ebebbbfcd1ffd1de93302e90a3fefe0ffcb95a3da7ce6e2dcdd973873b96dd939763025", 16);
@@ -64,6 +66,7 @@ public class RozRogelioProj2 {
 
         //encrypt 3 using poublic key
         BigInteger c = m.modPow(e, N);
+
         //decryptr with private key
         BigInteger decrypted = c.modPow(d, N);
 
@@ -84,14 +87,17 @@ public class RozRogelioProj2 {
         System.out.println("Original message (hex) = " + m.toString(16));
         System.out.println("Ciphertext = m^e mod N (hex) = " + c.toString(16));
         System.out.println("Decrypted = c^d mod N (hex) = " + decrypted.toString(16));
-//crt
+
+        //crt
         BigInteger dp = d.mod(pMinusOne);
         BigInteger dq = d.mod(qMinusOne);
         BigInteger qInverse = q.modInverse(p);
-//find m's reaminder modulo each prime
+
+        //find m's reaminder modulo each prime
         BigInteger m1 = c.modPow(dp, p);
         BigInteger m2 = c.modPow(dq, q);
-//combine two remainders for whole m
+
+        //combine two remainders for whole m
         BigInteger h = qInverse.multiply(m1.subtract(m2)).mod(p);
         BigInteger crtDecrypted = m2.add(h.multiply(q));
 
@@ -118,7 +124,7 @@ public class RozRogelioProj2 {
         }
         long end = System.nanoTime();
 
-//turn nanoseconds to seconds then calculate throughput
+        //turn nanoseconds to seconds then calculate throughput
         double regularSeconds = (end - start) / 1_000_000_000.0;
         double regularSecondsPerDecryption = regularSeconds / 1000.0;
         double regularKbps = N.bitLength() / regularSecondsPerDecryption / 1000.0;
